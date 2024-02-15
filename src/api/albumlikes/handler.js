@@ -14,7 +14,6 @@ class AlbumLikesHandler {
 
     await this._albumsService.getAlbumById(albumId);
     await this._service.verifyUserLike(albumId, credentialId);
-    // await this._service.verifyAlbumsOwner(albumId, credentialId);
 
     const albumLikes = await this._service.addLikeAlbum(credentialId, albumId);
 

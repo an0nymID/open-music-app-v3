@@ -43,7 +43,6 @@ class PlaylistsService {
         `playlists:${owner}`,
         JSON.stringify(result.rows),
       );
-      // console.log(result.rows);
       return result.rows;
     }
   }
@@ -54,13 +53,13 @@ class PlaylistsService {
       values: [id],
     };
 
-    const result = await this._pool.query(query);
+    const { rowCount, rows } = await this._pool.query(query);
 
-    if (!result.rows.length) {
+    if (!rowCount) {
       throw new NotFoundError('Playlist gagal dihapus. Id tidak ditemukan');
     }
 
-    const { owner } = result.rows[0];
+    const { owner } = rows[0];
     await this._cacheService.delete(`playlists:${owner}`);
   }
 
@@ -137,13 +136,13 @@ class PlaylistsService {
       text: 'DELETE FROM playlist_songs WHERE playlist_id=$1 AND song_id=$2 RETURNING id',
       values: [playlistId, songId],
     };
-    const result = await this._pool.query(query);
-    if (!result.rowCount) {
+    const { rowCount, rows } = await this._pool.query(query);
+    if (!rowCount) {
       throw new ClientError(
         'Lagu gagal dihapus dari playlist, song id tidak ditemukan',
       );
     }
-    const { id } = result.rows[0].id;
+    const { id } = rows[0].id;
     await this._cacheService.delete(`playlist_activities:${id}`);
   }
 
@@ -186,7 +185,7 @@ class PlaylistsService {
       values: [songId],
     };
     const result = await this._pool.query(query);
-    if (!result.rows.length) {
+    if (!result.rowCount) {
       throw new NotFoundError('Lagu tidak terdaftar');
     }
   }
@@ -199,13 +198,13 @@ class PlaylistsService {
       values: [id],
     };
 
-    const result = await this._pool.query(query);
+    const { rowCount, rows } = await this._pool.query(query);
 
-    if (!result.rows.length) {
+    if (!rowCount) {
       throw new NotFoundError('Playlist tidak ditemukan');
     }
 
-    const playlist = result.rows[0];
+    const playlist = rows[0];
 
     if (playlist.owner !== owner) {
       throw new AuthorizationError('Anda tidak berhak mengakses resource ini');

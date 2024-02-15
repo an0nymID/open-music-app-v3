@@ -17,13 +17,13 @@ class CollaborationsService {
       values: [id, playlistId, userId],
     };
 
-    const result = await this._pool.query(query);
+    const { rowCount, rows } = await this._pool.query(query);
 
-    if (!result.rowCount) {
+    if (!rowCount) {
       throw new InvariantError('Kolaborasi gagal ditambahkan');
     }
     await this._cacheService.delete(`playlists:${userId}`);
-    return result.rows[0].id;
+    return rows[0].id;
   }
 
   async deleteCollaboration(playlistId, userId) {
@@ -44,11 +44,11 @@ class CollaborationsService {
       text: 'SELECT * FROM users WHERE id = $1',
       values: [id],
     };
-    const result = await this._pool.query(query);
-    if (!result.rows.length) {
+    const { rowCount, rows } = await this._pool.query(query);
+    if (!rowCount) {
       throw new NotFoundError('User tidak tersedia');
     }
-    return result.rows[0];
+    return rows[0];
   }
 
   async verifyCollaborator(playlistId, userId) {
@@ -58,7 +58,7 @@ class CollaborationsService {
     };
     const result = await this._pool.query(query);
 
-    if (!result.rows.length) {
+    if (!result.rowCount) {
       throw new InvariantError('Kolaborasi gagal diverifikasi');
     }
   }

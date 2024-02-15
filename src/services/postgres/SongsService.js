@@ -62,16 +62,13 @@ class SongsService {
         values: [id],
       };
 
-      const result = await this._pool.query(query);
+      const { rowCount, rows } = await this._pool.query(query);
 
-      if (!result.rowCount) {
+      if (!rowCount) {
         throw new NotFoundError('Lagu tidak ditemukan');
       }
-      await this._cacheService.set(
-        `songs:${id}`,
-        JSON.stringify(result.rows[0]),
-      );
-      return result.rows[0];
+      await this._cacheService.set(`songs:${id}`, JSON.stringify(rows[0]));
+      return rows[0];
     }
   }
 
