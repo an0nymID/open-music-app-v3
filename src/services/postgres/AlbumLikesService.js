@@ -45,9 +45,9 @@ class AlbumLikesService {
 
       await this._cacheService.set(
         `likes:${albumId}`,
-        JSON.stringify(result.rowCount)
+        JSON.stringify(result.rowCount),
       );
-      return {likes: result.rowCount, isCache: false};
+      return { likes: result.rowCount, isCache: false };
     }
   }
 
