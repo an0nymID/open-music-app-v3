@@ -46,7 +46,7 @@ class AlbumsService {
 
       await this._cacheService.set(
         `albums:${id}`,
-        JSON.stringify(result.rows[0])
+        JSON.stringify(result.rows[0]),
       );
       console.log(result.rows[0]);
       return result.rows[0];
@@ -69,7 +69,7 @@ class AlbumsService {
 
       await this._cacheService.set(
         `albumsongs:${id}`,
-        JSON.stringify(result.rows)
+        JSON.stringify(result.rows),
       );
 
       return result.rows;
