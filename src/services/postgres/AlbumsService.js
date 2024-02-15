@@ -52,16 +52,26 @@ class AlbumsService {
   }
 
   async getSongsByAlbumId(id) {
-    const query = {
-      text: 'SELECT id, title, performer FROM songs WHERE albumid=$1',
-      values: [id],
-    };
-    const result = await this._pool.query(query);
-    if (!result.rows) {
-      throw new NotFoundError('Lagu tidak ditemukan');
-    }
+    try {
+      const result = await this._cacheService.get(`albumsongs:${id}`);
+      return JSON.parse(result);
+    } catch (error) {
+      const query = {
+        text: 'SELECT id, title, performer FROM songs WHERE albumid=$1',
+        values: [id],
+      };
+      const result = await this._pool.query(query);
+      if (!result.rows) {
+        throw new NotFoundError('Lagu tidak ditemukan');
+      }
 
-    return result.rows;
+      await this._cacheService.set(
+        `albumsongs:${id}`,
+        JSON.stringify(result.rows),
+      );
+
+      return result.rows;
+    }
   }
 
   async editAlbumById(id, { name, year }) {
