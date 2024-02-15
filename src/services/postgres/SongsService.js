@@ -55,8 +55,6 @@ class SongsService {
   async getSongById(id) {
     try {
       const result = await this._cacheService.get(`songs:${id}`);
-      console.log(result);
-      console.log(JSON.parse(result));
       return JSON.parse(result);
     } catch (error) {
       const query = {

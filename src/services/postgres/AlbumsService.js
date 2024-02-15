@@ -29,8 +29,6 @@ class AlbumsService {
   async getAlbumById(id) {
     try {
       const result = await this._cacheService.get(`albums:${id}`);
-      console.log(result);
-      console.log(JSON.parse(result));
       return JSON.parse(result);
     } catch (error) {
       const query = {
@@ -48,7 +46,6 @@ class AlbumsService {
         `albums:${id}`,
         JSON.stringify(result.rows[0]),
       );
-      console.log(result.rows[0]);
       return result.rows[0];
     }
   }
